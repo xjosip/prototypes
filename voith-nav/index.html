@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voith Navigation — Hover & Active Variants</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+  :root {
+    --blue-900: #000B48;
+    --blue-action: #084AFF;
+    --accent-green: #51fea0;
+    --white: #ffffff;
+    --subtle-default: #d6e1ff;
+    --subtle-hover: #b0c5ff;
+    --nav-height: 80px;
+    --font: 'Inter', system-ui, -apple-system, sans-serif;
+    --spacing-84: 84px;
+    --spacing-24: 24px;
+    --spacing-16: 16px;
+    --spacing-12: 12px;
+    --spacing-8: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a2e;
+    font-family: var(--font);
+    color: var(--white);
+    padding: 40px 0;
+  }
+
+  .variant-section {
+    max-width: 1440px;
+    margin: 0 auto 60px;
+  }
+
+  .variant-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    padding: 0 var(--spacing-84) 8px;
+  }
+
+  .variant-description {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    padding: 0 var(--spacing-84) 16px;
+    line-height: 1.5;
+  }
+
+  /* ── Navigation Bar ─────────────────────── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-height);
+    background: var(--blue-900);
+    padding: 0 var(--spacing-84);
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-24);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-16);
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--white);
+    text-decoration: none;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .primary-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    align-items: center;
+  }
+
+  .primary-links a {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 0.25px;
+    line-height: 20px;
+    position: relative;
+    padding: 10px var(--spacing-12);
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .secondary-nav {
+    display: flex;
+    gap: 0;
+    align-items: center;
+    list-style: none;
+  }
+
+  .secondary-nav a {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--subtle-default);
+    text-decoration: none;
+    line-height: 20px;
+    position: relative;
+    padding: 10px var(--spacing-12);
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+
+  .btn-contact {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue-action);
+    background: var(--white);
+    border: none;
+    padding: 6px 16px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    letter-spacing: 0.25px;
+    line-height: 20px;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .icon-group {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-8);
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    padding: var(--spacing-8);
+    border-radius: 4px;
+  }
+
+  .icon-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    transition: color 0.25s ease;
+  }
+
+  /* ═══ VARIANT 1: Background Pill ═══ */
+  .v-pill .primary-links a {
+    border-radius: 4px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+  }
+  .v-pill .secondary-nav a {
+    border-radius: 4px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+  }
+  .v-pill .primary-links a:hover,
+  .v-pill .secondary-nav a:hover { background: rgba(255,255,255,0.1); }
+  .v-pill .primary-links a:active,
+  .v-pill .secondary-nav a:active { background: rgba(255,255,255,0.18); }
+  .v-pill .primary-links a.selected,
+  .v-pill .secondary-nav a.selected { color: var(--accent-green); }
+  .v-pill .icon-btn:hover { background: rgba(255,255,255,0.1); }
+  .v-pill .icon-btn.selected { color: var(--accent-green); }
+  .v-pill .btn-contact:hover { background: var(--accent-green); color: var(--blue-900); }
+  .v-pill .btn-contact:active { transform: scale(0.97); background: #3de88c; }
+
+  /* ═══ VARIANT 2: Full-Height Bottom Border ═══ */
+  .v-border .primary-links a {
+    padding: 28px var(--spacing-12);
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    line-height: 20px;
+  }
+  .v-border .primary-links a::after,
+  .v-border .secondary-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--white);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.25s ease;
+  }
+  .v-border .primary-links a:hover::after,
+  .v-border .secondary-nav a:hover::after { transform: scaleX(1); }
+  .v-border .primary-links a:active::after,
+  .v-border .secondary-nav a:active::after { transform: scaleX(1); background: var(--accent-green); }
+  .v-border .primary-links a.selected::after,
+  .v-border .secondary-nav a.selected::after { transform: scaleX(1); background: var(--accent-green); }
+  .v-border .primary-links a.selected,
+  .v-border .secondary-nav a.selected { color: var(--accent-green); }
+  .v-border .secondary-nav a {
+    height: var(--nav-height);
+    padding: 28px var(--spacing-12);
+    display: flex;
+    align-items: center;
+  }
+  .v-border .icon-btn {
+    position: relative;
+    height: var(--nav-height);
+    border-radius: 0;
+  }
+  .v-border .icon-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--white);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.25s ease;
+  }
+  .v-border .icon-btn:hover { color: var(--accent-green); }
+  .v-border .icon-btn:hover::after { transform: scaleX(1); }
+  .v-border .icon-btn.selected { color: var(--accent-green); }
+  .v-border .icon-btn.selected::after { transform: scaleX(1); background: var(--accent-green); }
+  .v-border .btn-contact:hover { background: var(--accent-green); color: var(--blue-900); }
+  .v-border .btn-contact:active { transform: scale(0.97); }
+
+  /* ═══ VARIANT 3: Color Shift ═══ */
+  .v-color .primary-links a {
+    height: 56px;
+    display: flex;
+    align-items: center;
+  }
+  .v-color .secondary-nav a {
+    height: 56px;
+    display: flex;
+    align-items: center;
+  }
+  .v-color .primary-links a:hover { color: var(--subtle-hover); }
+  .v-color .secondary-nav a:hover { color: var(--white); }
+  .v-color .primary-links a:active { color: var(--accent-green); }
+  .v-color .primary-links a.selected,
+  .v-color .secondary-nav a.selected { color: var(--accent-green); }
+  .v-color .icon-btn:hover { color: var(--subtle-hover); }
+  .v-color .icon-btn.selected { color: var(--accent-green); }
+  .v-color .btn-contact:hover { background: var(--accent-green); color: var(--blue-900); }
+  .v-color .btn-contact:active { transform: scale(0.97); }
+</style>
+</head>
+<body>
+
+<!-- ═══ VARIANT 1: Background Pill ═══ -->
+<div class="variant-section">
+  <div class="variant-label">Variant 1 — Background Pill</div>
+  <div class="variant-description">Semi-transparent white pill on hover. Rounded 4px. 40px touch target.</div>
+  <nav class="v-pill" data-variant="pill">
+    <div class="nav-left">
+      <a href="#" class="logo">Voith</a>
+      <ul class="primary-links">
+        <li><a href="#">Industries</a></li>
+        <li><a href="#">Digitalization</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Magazin</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <ul class="secondary-nav">
+        <li><a href="#">Company</a></li>
+        <li><a href="#">News &amp; Media</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+      <a href="#" class="btn-contact">Contact</a>
+      <div class="icon-group">
+        <a href="#" class="icon-btn" aria-label="Search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><line x1="16.5" y1="16.5" x2="22" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
+        <a href="#" class="icon-btn" aria-label="Language"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 2.5v19" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="5" ry="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 9h19M2.5 15h19" stroke="currentColor" stroke-width="1.5"/></svg><span>EN</span></a>
+        <a href="#" class="icon-btn" aria-label="Shop"><svg viewBox="0 0 24 24" fill="none"><path d="M6 8V6a6 6 0 1 1 12 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="3" y="8" width="18" height="14" rx="1" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        <a href="#" class="icon-btn" aria-label="Login"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 21c0-4.42 3.58-8 8-8s8 3.58 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<!-- ═══ VARIANT 2: Full-Height Bottom Border ═══ -->
+<div class="variant-section">
+  <div class="variant-label">Variant 2 — Full-Height Bottom Border</div>
+  <div class="variant-description">White bottom border on hover. Green border + green text on selected.</div>
+  <nav class="v-border" data-variant="border">
+    <div class="nav-left">
+      <a href="#" class="logo">Voith</a>
+      <ul class="primary-links">
+        <li><a href="#">Industries</a></li>
+        <li><a href="#">Digitalization</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Magazin</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <ul class="secondary-nav">
+        <li><a href="#">Company</a></li>
+        <li><a href="#">News &amp; Media</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+      <a href="#" class="btn-contact">Contact</a>
+      <div class="icon-group">
+        <a href="#" class="icon-btn" aria-label="Search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><line x1="16.5" y1="16.5" x2="22" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
+        <a href="#" class="icon-btn" aria-label="Language"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 2.5v19" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="5" ry="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 9h19M2.5 15h19" stroke="currentColor" stroke-width="1.5"/></svg><span>EN</span></a>
+        <a href="#" class="icon-btn" aria-label="Shop"><svg viewBox="0 0 24 24" fill="none"><path d="M6 8V6a6 6 0 1 1 12 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="3" y="8" width="18" height="14" rx="1" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        <a href="#" class="icon-btn" aria-label="Login"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 21c0-4.42 3.58-8 8-8s8 3.58 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<!-- ═══ VARIANT 3: Color Shift ═══ -->
+<div class="variant-section">
+  <div class="variant-label">Variant 3 — Color Shift</div>
+  <div class="variant-description">Text shifts to subtle blue on hover, accent green on selected. No background or underline.</div>
+  <nav class="v-color" data-variant="color">
+    <div class="nav-left">
+      <a href="#" class="logo">Voith</a>
+      <ul class="primary-links">
+        <li><a href="#">Industries</a></li>
+        <li><a href="#">Digitalization</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Magazin</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <ul class="secondary-nav">
+        <li><a href="#">Company</a></li>
+        <li><a href="#">News &amp; Media</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+      <a href="#" class="btn-contact">Contact</a>
+      <div class="icon-group">
+        <a href="#" class="icon-btn" aria-label="Search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><line x1="16.5" y1="16.5" x2="22" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
+        <a href="#" class="icon-btn" aria-label="Language"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 2.5v19" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="5" ry="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 9h19M2.5 15h19" stroke="currentColor" stroke-width="1.5"/></svg><span>EN</span></a>
+        <a href="#" class="icon-btn" aria-label="Shop"><svg viewBox="0 0 24 24" fill="none"><path d="M6 8V6a6 6 0 1 1 12 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="3" y="8" width="18" height="14" rx="1" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        <a href="#" class="icon-btn" aria-label="Login"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 21c0-4.42 3.58-8 8-8s8 3.58 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<script>
+  // Click to select — clears all selections across nav, then toggles clicked item
+  function clearAll(nav) {
+    nav.querySelectorAll('.primary-links a.selected, .secondary-nav a.selected, .icon-btn.selected').forEach(a => a.classList.remove('selected'));
+  }
+  document.querySelectorAll('.primary-links a, .secondary-nav a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const nav = link.closest('nav');
+      const listClass = link.closest('ul').className;
+      const wasSelected = link.classList.contains('selected');
+      clearAll(nav);
+      if (!wasSelected) link.classList.add('selected');
+    });
+  });
+  document.querySelectorAll('.icon-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const nav = btn.closest('nav');
+      const wasSelected = btn.classList.contains('selected');
+      clearAll(nav);
+      if (!wasSelected) btn.classList.add('selected');
+    });
+  });
+</script>
+</body>
+</html>
