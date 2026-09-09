@@ -276,11 +276,35 @@
   .v-color .btn-contact:active { transform: scale(0.97); }
 </style>
 </head>
-<body>
-<script>
-const HASH = '8573556848636e0f0ce0ef26aa645c1d2c935e63c59970f8006912c9927e52cc';
-if (sessionStorage.getItem('proto_auth') !== HASH) window.location.href = '../';
-</script>
+<style>
+  .gate { position: fixed; inset: 0; background: #1a1a2e; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+  .gate form { text-align: center; }
+  .gate input[type="password"] {
+    font-size: 16px; padding: 10px 16px; border: 2px solid #333; border-radius: 6px;
+    outline: none; width: 240px; display: block; margin: 0 auto 12px;
+    background: #0d0d1a; color: #fff;
+  }
+  .gate input[type="password"]:focus { border-color: #084AFF; }
+  .gate button {
+    font-size: 14px; font-weight: 600; padding: 10px 24px; background: #084AFF; color: #fff;
+    border: none; border-radius: 6px; cursor: pointer;
+  }
+  .gate button:hover { background: #0640d6; }
+  .gate .error { color: #e55; font-size: 13px; margin-top: 8px; display: none; }
+  .gate label { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 8px; display: block; }
+  .gate h1 { color: #fff; font-family: system-ui, sans-serif; font-size: 20px; margin-bottom: 20px; }
+  body.locked > *:not(.gate) { display: none !important; }
+</style>
+<body class="locked">
+<div class="gate" id="gate">
+  <form id="auth">
+    <h1>voith-nav</h1>
+    <label for="pw">Password</label>
+    <input type="password" id="pw" autocomplete="off" autofocus>
+    <button type="submit">Enter</button>
+    <div class="error" id="err">Wrong password</div>
+  </form>
+</div>
 
 <!-- ═══ VARIANT 1: Background Pill ═══ -->
 <div class="variant-section">
@@ -376,6 +400,24 @@ if (sessionStorage.getItem('proto_auth') !== HASH) window.location.href = '../';
 </div>
 
 <script>
+  // Auth gate
+  const HASH = '8573556848636e0f0ce0ef26aa645c1d2c935e63c59970f8006912c9927e52cc';
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function unlock() {
+    document.getElementById('gate').style.display = 'none';
+    document.body.classList.remove('locked');
+  }
+  if (sessionStorage.getItem('proto_auth') === HASH) unlock();
+  document.getElementById('auth').addEventListener('submit', async e => {
+    e.preventDefault();
+    const h = await sha256(document.getElementById('pw').value);
+    if (h === HASH) { sessionStorage.setItem('proto_auth', HASH); unlock(); }
+    else document.getElementById('err').style.display = 'block';
+  });
+
   // Click to select — clears all selections across nav, then toggles clicked item
   function clearAll(nav) {
     nav.querySelectorAll('.primary-links a.selected, .secondary-nav a.selected, .icon-btn.selected').forEach(a => a.classList.remove('selected'));
