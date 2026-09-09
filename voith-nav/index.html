@@ -290,10 +290,9 @@
   .gate .error { color: #e55; font-size: 13px; margin-top: 8px; display: none; }
   .gate label { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 8px; display: block; }
   .gate h1 { color: #fff; font-family: system-ui, sans-serif; font-size: 20px; margin-bottom: 20px; }
-  body.locked .content { display: none !important; }
 </style>
 </head>
-<body class="locked">
+<body>
 <div class="gate" id="gate">
   <form id="auth">
     <h1>voith-nav</h1>
@@ -304,7 +303,7 @@
   </form>
 </div>
 
-<div class="content">
+<div class="content" style="display:none">
 <!-- ═══ VARIANT 1: Background Pill ═══ -->
 <div class="variant-section">
   <div class="variant-label">Variant 1 — Background Pill</div>
@@ -409,7 +408,7 @@
   }
   function unlock() {
     document.getElementById('gate').style.display = 'none';
-    document.body.classList.remove('locked');
+    document.querySelector('.content').style.display = 'block';
   }
   if (sessionStorage.getItem('proto_auth') === HASH) unlock();
   document.getElementById('auth').addEventListener('submit', async e => {
