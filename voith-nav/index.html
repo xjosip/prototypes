@@ -274,9 +274,6 @@
   .v-color .icon-btn.selected { color: var(--accent-green); }
   .v-color .btn-contact:hover { background: var(--accent-green); color: var(--blue-900); }
   .v-color .btn-contact:active { transform: scale(0.97); }
-</style>
-</head>
-<style>
   .gate { position: fixed; inset: 0; background: #1a1a2e; display: flex; align-items: center; justify-content: center; z-index: 9999; }
   .gate form { text-align: center; }
   .gate input[type="password"] {
@@ -293,8 +290,9 @@
   .gate .error { color: #e55; font-size: 13px; margin-top: 8px; display: none; }
   .gate label { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 8px; display: block; }
   .gate h1 { color: #fff; font-family: system-ui, sans-serif; font-size: 20px; margin-bottom: 20px; }
-  body.locked > *:not(.gate) { display: none !important; }
+  body.locked .content { display: none !important; }
 </style>
+</head>
 <body class="locked">
 <div class="gate" id="gate">
   <form id="auth">
@@ -306,6 +304,7 @@
   </form>
 </div>
 
+<div class="content">
 <!-- ═══ VARIANT 1: Background Pill ═══ -->
 <div class="variant-section">
   <div class="variant-label">Variant 1 — Background Pill</div>
@@ -397,6 +396,8 @@
       </div>
     </div>
   </nav>
+</div>
+
 </div>
 
 <script>
