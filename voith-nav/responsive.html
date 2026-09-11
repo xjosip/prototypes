@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>voith-nav — Responsive</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+  :root {
+    --blue-900: #000B48;
+    --blue-action: #084AFF;
+    --accent-green: #51fea0;
+    --white: #ffffff;
+    --subtle-default: #d6e1ff;
+    --subtle-hover: #b0c5ff;
+    --disabled: #a2aea4;
+    --font: 'Inter', system-ui, sans-serif;
+    --page-margin: 20px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a2e;
+    font-family: var(--font);
+    color: var(--white);
+  }
+
+  /* ── Auth Gate ─────────────────────────────── */
+  .gate {
+    position: fixed;
+    inset: 0;
+    background: #1a1a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .gate form { text-align: center; }
+  .gate h1 { color: #fff; font-size: 20px; margin-bottom: 20px; }
+  .gate label { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 8px; display: block; }
+  .gate input[type="password"] {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    outline: none;
+    display: block;
+    width: 220px;
+    margin: 0 auto 12px;
+  }
+  .gate input[type="password"]:focus { border-color: #084AFF; }
+  .gate button {
+    background: #084AFF;
+    color: #fff;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .gate button:hover { background: #0640d6; }
+  .gate .error { color: #e55; font-size: 13px; margin-top: 8px; display: none; }
+
+  /* ── Main Content ──────────────────────────── */
+  .content { display: none; }
+
+  /* ════════════════════════════════════════════
+     HEADER / NAV
+  ════════════════════════════════════════════ */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--blue-900);
+    height: 56px; /* mobile-first */
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    padding: 0 var(--page-margin);
+    justify-content: space-between;
+  }
+
+  /* ── Logo ───────────────────────────────── */
+  .logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+
+  .logo svg {
+    width: 87px;
+    height: 20px;
+  }
+
+  /* ── Nav Groups ─────────────────────────── */
+  .nav-left, .nav-right {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .nav-left { gap: 24px; }
+  .nav-right { gap: 16px; }
+
+  /* ── Primary Links ──────────────────────── */
+  .primary-links {
+    display: none; /* hidden on mobile */
+    gap: 0;
+    list-style: none;
+    align-items: stretch;
+    margin: 0;
+    padding: 0;
+  }
+
+  .primary-links li,
+  .secondary-nav li {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .primary-links a {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 0.25px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    position: relative;
+    transition: color 0.25s ease;
+  }
+
+  /* ── Secondary Nav ──────────────────────── */
+  .secondary-nav {
+    display: none; /* hidden until LG */
+    gap: 0;
+    align-items: stretch;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .secondary-nav a {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--subtle-default);
+    text-decoration: none;
+    line-height: 20px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    position: relative;
+    transition: color 0.25s ease;
+  }
+
+  /* ── Contact Button ─────────────────────── */
+  .btn-contact {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue-action);
+    background: var(--white);
+    border: none;
+    padding: 0 16px;
+    height: 40px;
+    align-self: center;
+    display: none; /* shown at SM+ */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    letter-spacing: 0.25px;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+  .btn-contact:hover {
+    outline: 1px solid rgba(255,255,255,0.4);
+    outline-offset: 2px;
+  }
+
+  /* ── Icon Group ─────────────────────────── */
+  .icon-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 4px;
+  }
+
+  /* ── Icon Buttons (matching Figma Icon Menu Item / Pill) ── */
+  .icon-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: -12px; /* compensate last icon padding to align with page margin */
+  }
+
+  .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--white);
+    cursor: pointer;
+    transition: color 0.25s ease, background 0.25s ease;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 4px;
+    align-self: center;
+  }
+
+  .icon-btn:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .icon-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* Hamburger → X swap */
+  .icon-hamburger .icon-close-svg { display: none; }
+  .icon-hamburger.menu-open .icon-hamburger-svg { display: none; }
+  .icon-hamburger.menu-open .icon-close-svg { display: block; }
+
+  .icon-btn .icon-label {
+    display: none;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  /* XS: Search + Login + Hamburger */
+  .icon-search    { display: flex; }
+  .icon-lang      { display: none; }
+  .icon-shop      { display: none; }
+  .icon-login     { display: flex; }
+  .icon-hamburger { display: flex; }
+
+  /* ════════════════════════════════════════════
+     BOTTOM BORDER HOVER EFFECT (Variant 2)
+  ════════════════════════════════════════════ */
+
+  /* The ::after pseudo creates the border line */
+  .primary-links a::after,
+  .secondary-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 3px;
+    background: var(--white);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .primary-links a:hover::after,
+  .secondary-nav a:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Selected state — green border + green text */
+  .primary-links a.selected,
+  .secondary-nav a.selected {
+    color: var(--accent-green);
+  }
+
+  .primary-links a.selected::after,
+  .secondary-nav a.selected::after {
+    background: var(--accent-green);
+    transform: scaleX(1);
+  }
+
+
+  /* ════════════════════════════════════════════
+     HAMBURGER MENU OVERLAY
+  ════════════════════════════════════════════ */
+  .menu-overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 56px; /* below mobile header */
+    bottom: 0;
+    background: var(--blue-900);
+    z-index: 99;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .menu-overlay.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Menu groups — vertical padding per section */
+  .menu-primary,
+  .menu-secondary,
+  .menu-utils {
+    list-style: none;
+    margin: 0;
+    padding: 12px 0;
+  }
+
+  /* Primary items: 56px, 20px bold, white */
+  .menu-primary li a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 20px;
+    margin: 0 calc(var(--page-margin) - 20px);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.25s ease, background 0.25s ease;
+    cursor: pointer;
+  }
+  .menu-primary li a:hover { background: rgba(255,255,255,0.1); }
+  .menu-primary li a.selected { color: var(--accent-green); }
+  .menu-primary li a:focus-visible { outline: 2px solid var(--accent-green); outline-offset: -2px; }
+  .menu-primary li a svg {
+    width: 24px; height: 24px;
+    fill: none; stroke: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* Secondary items: 48px, 16px regular, subtle */
+  .menu-secondary li a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+    padding: 0 20px;
+    margin: 0 calc(var(--page-margin) - 20px);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.25s ease, background 0.25s ease;
+    cursor: pointer;
+  }
+  .menu-secondary li a:hover { background: rgba(255,255,255,0.1); }
+  .menu-secondary li a.selected { color: var(--accent-green); }
+  .menu-secondary li a:focus-visible { outline: 2px solid var(--accent-green); outline-offset: -2px; }
+  .menu-secondary li a svg {
+    width: 24px; height: 24px;
+    fill: none; stroke: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* Utility items: 44px, 14px regular, subtle, icon + text */
+  .menu-utils li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 44px;
+    padding: 0 20px;
+    margin: 0 calc(var(--page-margin) - 20px);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--subtle-default);
+    text-decoration: none;
+    transition: color 0.25s ease;
+    cursor: pointer;
+  }
+  .menu-utils li a:hover { color: var(--white); background: rgba(255,255,255,0.1); }
+  .menu-utils li a.selected { color: var(--accent-green); }
+  .menu-utils li a:focus-visible { outline: 2px solid var(--accent-green); outline-offset: -2px; }
+  .menu-utils li a svg {
+    width: 24px; height: 24px;
+    flex-shrink: 0;
+  }
+
+  /* Contact button at bottom */
+  .menu-contact-wrap {
+    padding: 16px var(--page-margin);
+  }
+  .menu-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 375px;
+    height: 40px;
+    background: var(--white);
+    color: var(--blue-action);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.25px;
+    cursor: pointer;
+    transition: outline 0.25s ease;
+  }
+  .menu-contact:hover {
+    outline: 1px solid rgba(255,255,255,0.4);
+    outline-offset: 2px;
+  }
+
+  /* ════════════════════════════════════════════
+     SUB-NAV BAR
+  ════════════════════════════════════════════ */
+  .sub-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 56px; /* mobile — sits below 56px header */
+    z-index: 99;
+    background: #084AFF;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--page-margin);
+    gap: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .sub-nav::-webkit-scrollbar { display: none; }
+
+  .sub-nav-list {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .sub-nav-list a {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--white);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+  .sub-nav-list a:hover { color: rgba(255,255,255,0.7); }
+  .sub-nav-list a.active {
+    color: var(--accent-green);
+    font-weight: 600;
+  }
+
+  .sub-nav-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,0.3);
+    flex-shrink: 0;
+  }
+
+  /* ════════════════════════════════════════════
+     PAGE CONTENT
+  ════════════════════════════════════════════ */
+  .page-body {
+    padding-top: 104px; /* 56px header + 48px sub-nav (mobile) */
+  }
+
+  /* ── Hero Stage ─────────────────────────── */
+  .hero {
+    width: 100%;
+    min-height: max(600px, 70vh);
+    background: linear-gradient(135deg, #000B48 0%, #001a6e 30%, #0a2d7a 60%, #0d3b8a 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 60px var(--page-margin);
+  }
+
+  .hero-inner {
+    max-width: 720px;
+  }
+
+  .hero-eyebrow {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-green);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 6vw, 76px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 span { color: var(--accent-green); }
+
+  .hero-sub {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.55;
+    margin-bottom: 36px;
+    max-width: 600px;
+    opacity: 0.9;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    padding: 0 20px;
+    background: var(--white);
+    color: #084AFF;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.25px;
+    transition: opacity 0.25s ease, outline 0.25s ease;
+  }
+  .hero-cta:hover {
+    opacity: 0.92;
+    outline: 1px solid rgba(255,255,255,0.4);
+    outline-offset: 2px;
+  }
+
+  /* ── Content Sections (white bg, Voith style) ── */
+  .content-area {
+    background: #ffffff;
+  }
+
+  .section {
+    padding: 80px var(--page-margin);
+    max-width: 1112px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue-action);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  .section h2 {
+    font-size: clamp(32px, 5vw, 40px);
+    font-weight: 700;
+    color: #000B48;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+
+  .section h2 span { color: var(--blue-action); }
+
+  .section h3 {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700;
+    color: #000B48;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+
+  .section p {
+    font-size: 18px;
+    color: #000B48;
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  .section p.lead {
+    font-size: clamp(20px, 2.5vw, 24px);
+    line-height: 1.5;
+    color: #000B48;
+  }
+
+  .section-divider {
+    height: 1px;
+    background: #a2aea4;
+    max-width: 1112px;
+    margin: 0 auto;
+  }
+
+  .section .btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 20px;
+    background: var(--blue-action);
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.25px;
+    margin-top: 16px;
+    transition: background 0.25s ease;
+  }
+  .section .btn-action:hover { background: #0640d6; }
+
+  .quote-block {
+    padding: 56px 0 56px 80px;
+    position: relative;
+    margin: 40px 0;
+    border-left: 3px solid var(--blue-action);
+  }
+
+  .quote-block p {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700;
+    color: #000B48;
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  .quote-author {
+    font-size: 16px;
+    font-weight: 400;
+    color: #000B48;
+    margin-top: 20px;
+    font-style: normal;
+  }
+
+  .list-voith {
+    list-style: none;
+    padding: 24px 0;
+    margin: 0;
+  }
+
+  .list-voith li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 8px 0;
+    font-size: 18px;
+    color: #000B48;
+    line-height: 1.65;
+  }
+
+  .list-voith li::before {
+    content: '›';
+    color: var(--blue-action);
+    font-weight: 700;
+    font-size: 20px;
+    flex-shrink: 0;
+    line-height: 1.5;
+  }
+
+  /* ════════════════════════════════════════════
+     RESPONSIVE BREAKPOINTS
+  ════════════════════════════════════════════ */
+
+  /* SM: ≥600px — show Contact + Search + Language + Hamburger */
+  @media (min-width: 600px) {
+    .site-header { height: 56px; }
+    .page-body   { padding-top: 104px; } /* 56px + 48px sub-nav */
+    :root { --page-margin: 28px; }
+    .nav-inner   { padding: 0 var(--page-margin); }
+
+
+    /* SM: Contact + Search + Cart + Login + Hamburger */
+    .btn-contact    { display: flex; }
+    .icon-search    { display: flex; }
+    .icon-lang      { display: none; }
+    .icon-shop      { display: flex; }
+    .icon-login     { display: flex; }
+    .icon-hamburger { display: flex; }
+  }
+
+  /* MD: ≥900px — taller header, still hamburger-only (no primary/secondary links) */
+  @media (min-width: 900px) {
+    .site-header { height: 80px; }
+    .page-body   { padding-top: 128px; } /* 80px + 48px sub-nav */
+    .sub-nav     { top: 80px; padding: 0 var(--page-margin); }
+    .menu-overlay { top: 80px; }
+    :root { --page-margin: 40px; }
+    .nav-inner   { padding: 0 var(--page-margin); }
+
+    /* MD: same icons as SM, just taller header */
+    .primary-links  { display: none; }
+    .secondary-nav  { display: none; }
+    .icon-hamburger { display: flex; }
+  }
+
+  /* LG 1200: bigger header, still hamburger, Contact + Search + Cart + Login + Hamburger */
+  @media (min-width: 1200px) {
+    :root { --page-margin: 84px; }
+    .nav-inner { padding: 0 var(--page-margin); }
+    .hero { padding: 80px var(--page-margin); }
+    .logo svg { width: 111px; height: 26px; }
+
+    .primary-links  { display: none; }
+    .secondary-nav  { display: none; }
+    .btn-contact    { display: flex; }
+    .icon-search    { display: flex; }
+    .icon-lang      { display: none; }
+    .icon-shop      { display: flex; }
+    .icon-login     { display: flex; }
+    .icon-hamburger { display: flex; }
+  }
+
+  /* LG 1366+: full desktop nav, all items, no hamburger */
+  @media (min-width: 1366px) {
+    .primary-links  { display: flex; }
+    .secondary-nav  { display: flex; }
+
+    .icon-lang .icon-label { display: inline; }
+    .icon-lang      { display: flex; }
+    .icon-shop      { display: flex; }
+    .icon-login     { display: flex; }
+    .icon-hamburger { display: none; }
+    .btn-contact    { display: flex; }
+  }
+
+  /* XL: ≥1600px */
+  @media (min-width: 1600px) {
+    .nav-inner { padding: 0 84px; }
+  }
+
+  /* 2XL: ≥1920px */
+  @media (min-width: 1920px) {
+    .nav-inner { padding: 0 84px; }
+  }
+
+  @media (min-width: 900px) {
+    .section { padding: 120px var(--page-margin); }
+  }
+  @media (min-width: 1200px) {
+    .section { padding: 160px var(--page-margin); max-width: 1440px; }
+  }
+
+
+</style>
+</head>
+<body>
+
+<!-- Auth Gate -->
+<div class="gate" id="gate">
+  <form id="auth">
+    <h1>Voith Nav Prototype</h1>
+    <label for="pw">Enter password to view</label>
+    <input type="password" id="pw" autocomplete="off" autofocus placeholder="Password">
+    <button type="submit">Unlock</button>
+    <div class="error" id="err">Wrong password</div>
+  </form>
+</div>
+
+<!-- Main Content (hidden until authenticated) -->
+<div class="content" id="main-content">
+
+  <!-- ══════════════════════════════════════════
+       SITE HEADER
+  ══════════════════════════════════════════ -->
+  <header class="site-header" id="site-header">
+    <div class="nav-inner">
+
+      <!-- Left: Logo + Primary Nav -->
+      <div class="nav-left">
+        <a class="logo" href="#" onclick="return false;"><svg width="111" height="26" viewBox="0 0 111 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.1326 25.1664H10.5682L0.276367 0.782227H8.45013L13.3739 14.4301L18.2985 0.782227H26.4731L16.1326 25.1664Z" fill="white"/><path d="M51.5858 12.9748C51.5858 5.95051 46.0214 0.28125 39.1264 0.28125C32.2314 0.28125 26.6191 5.95012 26.6191 12.9748C26.6191 19.9994 32.233 25.7187 39.1264 25.7187C46.0198 25.7187 51.5858 19.9994 51.5858 12.9748ZM44.7894 12.9748C44.7894 16.1858 42.279 18.7949 39.1268 18.7949C35.9747 18.7949 33.4148 16.1858 33.4148 12.9748C33.4148 9.76377 35.9754 7.20506 39.1268 7.20506C42.2782 7.20506 44.7894 9.76377 44.7894 12.9748Z" fill="white"/><path d="M56.0166 0.782227H59.7029H63.4037V25.1664H56.0166V0.782227Z" fill="white"/><path d="M80.2937 8.00776V25.1664H72.9066V8.00776H67.8838V0.782227H85.3164V8.00776H80.2937Z" fill="white"/><path d="M103.338 25.1664V16.3362H97.1832V25.1664H89.7969V0.782227H97.1832V9.11183H103.338V0.782227H110.724V25.1664H103.338Z" fill="white"/></svg></a>
+
+        <ul class="primary-links" id="primary-links">
+          <li><a href="#" data-group="primary">Industries</a></li>
+          <li><a href="#" data-group="primary">Digitalization</a></li>
+          <li><a href="#" data-group="primary">Services</a></li>
+          <li><a href="#" data-group="primary">Magazin</a></li>
+        </ul>
+      </div>
+
+      <!-- Right: Secondary Nav + Contact + Icons -->
+      <div class="nav-right">
+
+        <ul class="secondary-nav" id="secondary-nav">
+          <li><a href="#" data-group="secondary">Company</a></li>
+          <li><a href="#" data-group="secondary">News &amp; Media</a></li>
+          <li><a href="#" data-group="secondary">Careers</a></li>
+        </ul>
+
+        <a class="btn-contact" href="#" onclick="return false;">Contact</a>
+
+        <!-- Icon group: search, lang, shop, login -->
+        <div class="icon-group">
+          <a class="icon-btn icon-search" id="icon-search" href="#" onclick="return false;" aria-label="Search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><line x1="16.5" y1="16.5" x2="22" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
+          <a class="icon-btn icon-lang" id="icon-lang" href="#" onclick="return false;" aria-label="Language"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 2.5v19" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="5" ry="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 9h19M2.5 15h19" stroke="currentColor" stroke-width="1.5"/></svg><span class="icon-label">EN</span></a>
+          <a class="icon-btn icon-shop" id="icon-shop" href="#" onclick="return false;" aria-label="Shop"><svg viewBox="0 0 24 24" fill="none"><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="21" r="1.5" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="21" r="1.5" stroke="currentColor" stroke-width="1.5"/></svg></a>
+          <a class="icon-btn icon-login" id="icon-login" href="#" onclick="return false;" aria-label="Login"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10.5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="9" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 20.5c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+        </div><!-- /icon-group -->
+
+        <a class="icon-btn icon-hamburger" id="icon-hamburger" href="#" onclick="return false;" aria-label="Menu">
+          <svg class="icon-hamburger-svg" viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <svg class="icon-close-svg" viewBox="0 0 24 24" fill="none"><line x1="5" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       SUB-NAVIGATION BAR
+  ══════════════════════════════════════════ -->
+  <nav class="sub-nav" aria-label="Section navigation">
+    <ul class="sub-nav-list">
+      <li><a href="#" onclick="return false;" class="active">Paper</a></li>
+      <li><span class="sub-nav-divider" role="separator"></span></li>
+      <li><a href="#" onclick="return false;">Mills, Products &amp; Components</a></li>
+      <li><a href="#" onclick="return false;">Digital Solutions</a></li>
+      <li><a href="#" onclick="return false;">Service Portfolio</a></li>
+      <li><a href="#" onclick="return false;">Cases</a></li>
+    </ul>
+  </nav>
+
+  <!-- ══════════════════════════════════════════
+       HAMBURGER MENU OVERLAY
+  ══════════════════════════════════════════ -->
+  <div class="menu-overlay" id="menu-overlay" role="dialog" aria-label="Navigation menu">
+
+    <ul class="menu-primary" id="menu-primary">
+      <li><a href="#" data-menu-group="primary">
+        Industries
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a></li>
+      <li><a href="#" data-menu-group="primary">
+        Digitalization
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a></li>
+      <li><a href="#" data-menu-group="primary">
+        Services
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a></li>
+      <li><a href="#" data-menu-group="primary">
+        Magazin
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a></li>
+    </ul>
+
+
+    <ul class="menu-secondary" id="menu-secondary">
+      <li><a href="#" data-menu-group="secondary">
+        Company
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a></li>
+      <li><a href="#" data-menu-group="secondary">
+        News
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a></li>
+      <li><a href="#" data-menu-group="secondary">
+        Careers
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a></li>
+    </ul>
+
+
+    <ul class="menu-utils">
+      <li><a href="#" onclick="return false;" data-menu-group="utils"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12.1 1C6 1 1 6 1 12.1C1 18.2 6 23.2 12.1 23.2C18.2 23.2 23.2 18.2 23.2 12.1C23.2 6 18.2 1 12.1 1ZM19.9 8.1H17.4C17.1 6.7 16.7 5.4 16.2 4.4C17.8 5.3 19 6.5 19.8 8.1H19.9ZM21 12.1C21 12.7 20.8 13.3 20.6 13.9H17.7C17.7 13.3 17.9 12.8 17.9 12.1C17.9 11.4 17.8 10.9 17.7 10.3H20.6C20.7 10.9 21 11.5 21 12.1ZM12.1 21C10.9 21 9.6 19 9 16.1H15.2C14.5 19 13.3 21 12.1 21ZM8.7 13.9C8.7 13.3 8.5 12.8 8.5 12.1C8.5 11.4 8.6 10.9 8.7 10.3H15.5C15.5 10.9 15.7 11.5 15.7 12.1C15.7 12.7 15.6 13.3 15.5 13.9H8.7ZM3.2 12.1C3.2 11.5 3.4 10.9 3.6 10.3H6.5C6.5 10.9 6.3 11.5 6.3 12.1C6.3 12.7 6.4 13.3 6.5 13.9H3.6C3.5 13.3 3.2 12.7 3.2 12.1ZM12.1 3.2C13.3 3.2 14.6 5.2 15.2 8.1H9C9.7 5.2 10.9 3.2 12.1 3.2ZM7.9 4.4C7.4 5.4 7 6.7 6.7 8.1H4.2C5 6.5 6.3 5.2 7.8 4.4H7.9ZM4.3 16.1H6.8C7.1 17.5 7.5 18.8 8 19.8C6.4 18.9 5.2 17.7 4.4 16.1H4.3ZM16.3 19.8C16.8 18.8 17.2 17.5 17.5 16.1H20C19.2 17.7 17.9 19 16.4 19.8H16.3Z" fill="currentColor"/></svg> Global Website | English</a></li>
+      <li><a href="#" onclick="return false;" data-menu-group="utils"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12.1 1C6 1 1 6 1 12.1C1 18.2 6 23.2 12.1 23.2C18.2 23.2 23.2 18.2 23.2 12.1C23.2 6 18.2 1 12.1 1ZM8.1 19.9V17C8.1 15.8 9.1 14.7 10.4 14.7H13.9C15.1 14.7 16.2 15.7 16.2 17V19.8C15 20.4 13.7 20.9 12.2 20.9C10.7 20.9 9.4 20.5 8.2 19.8L8.1 19.9ZM18.3 18.4V17C18.3 14.5 16.3 12.6 13.8 12.6H10.3C7.8 12.6 5.8 14.6 5.8 17V18.4C4.1 16.8 3.1 14.5 3.1 12C3.2 7.2 7.2 3.2 12.1 3.2C17 3.2 21 7.2 21 12.1C21 14.6 19.9 16.9 18.3 18.4Z" fill="currentColor"/><path d="M12.0999 5.2998C10.2999 5.2998 8.7999 6.7998 8.7999 8.5998C8.7999 10.3998 10.2999 11.8998 12.0999 11.8998C13.8999 11.8998 15.3999 10.3998 15.3999 8.5998C15.3999 6.7998 13.8999 5.2998 12.0999 5.2998ZM12.0999 9.6998C11.4999 9.6998 10.9999 9.1998 10.9999 8.5998C10.9999 7.9998 11.4999 7.4998 12.0999 7.4998C12.6999 7.4998 13.1999 7.9998 13.1999 8.5998C13.1999 9.1998 12.6999 9.6998 12.0999 9.6998Z" fill="currentColor"/></svg> Login</a></li>
+      <li><a href="#" onclick="return false;" data-menu-group="utils"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6.9 4.9L6.5 2H2V4.2H4.5L6.4 17.6H20.3L22 5H6.9V4.9ZM8.3 15.4L7.2 7.2H19.6L18.5 15.4H8.3Z" fill="currentColor"/><path d="M8.9 18.7C8 18.7 7.2 19.5 7.2 20.4C7.2 21.3 8 22.1 8.9 22.1C9.8 22.1 10.6 21.3 10.6 20.4C10.6 19.5 9.8 18.7 8.9 18.7Z" fill="currentColor"/><path d="M17.5 18.7C16.6 18.7 15.8 19.5 15.8 20.4C15.8 21.3 16.6 22.1 17.5 22.1C18.4 22.1 19.2 21.3 19.2 20.4C19.2 19.5 18.4 18.7 17.5 18.7Z" fill="currentColor"/></svg> Webshop</a></li>
+    </ul>
+
+    <div class="menu-contact-wrap">
+      <a class="menu-contact" href="#" onclick="return false;">Contact</a>
+    </div>
+
+  </div><!-- /menu-overlay -->
+
+  <!-- ══════════════════════════════════════════
+       PAGE BODY
+  ══════════════════════════════════════════ -->
+  <div class="page-body">
+
+    <!-- Hero Stage -->
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-eyebrow">VOITH</p>
+        <h1>Technology that sets the <span>world in motion</span></h1>
+        <p class="hero-sub">As a global technology company, we set standards in energy, paper, and transportation and shaping a sustainable future.</p>
+        <a class="hero-cta" href="#" onclick="return false;">Explore what drives us →</a>
+      </div>
+    </section>
+
+    <div class="content-area">
+
+    <!-- Section 1 -->
+    <section class="section">
+      <p class="section-eyebrow">Paper</p>
+      <h2>Individual <span>pathways</span> at your service</h2>
+      <p class="lead">Industrial maintenance is now strategic and digital. Three key strategies extend asset life, secure higher availability and future-proof operations.</p>
+      <p>In the realm of digital transformation, the landscape is evolving rapidly. Companies are embracing innovative strategies to enhance operational efficiency and drive growth. The integration of technology into industrial maintenance is not just a trend; it's a necessity for staying competitive in today's market.</p>
+      <p>As organizations navigate this shift, they are discovering the importance of data-driven decision-making and predictive maintenance. By leveraging advanced analytics and IoT solutions, businesses can extend the lifespan of their assets, ensure higher availability, and future-proof their operations against unforeseen challenges.</p>
+
+      <h3>Section Headline</h3>
+      <p>In the realm of digital transformation, the landscape is evolving rapidly. Companies are embracing innovative strategies to enhance operational efficiency and drive growth. The integration of technology into industrial maintenance is not just a trend; it's a necessity for staying competitive in today's market.</p>
+      <p>As organizations navigate this shift, they are discovering the importance of data-driven decision-making and predictive maintenance. By leveraging advanced analytics and IoT solutions, businesses can extend the lifespan of their assets, ensure higher availability, and future-proof their operations against unforeseen challenges.</p>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Section 2 -->
+    <section class="section">
+      <p class="section-eyebrow">Maintenance</p>
+      <h3>Section Headline</h3>
+      <p>In the realm of digital transformation, the landscape is evolving rapidly. Companies are embracing innovative strategies to enhance operational efficiency and drive growth. The integration of technology into industrial maintenance is not just a trend; it's a necessity for staying competitive in today's market.</p>
+
+      <div class="quote-block">
+        <p>„Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolis ~125char."</p>
+        <div class="quote-author">— First Name Surname, Role in the Organisation</div>
+      </div>
+
+      <ul class="list-voith">
+        <li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</li>
+        <li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</li>
+        <li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</li>
+      </ul>
+
+      <a class="btn-action" href="#" onclick="return false;">Button →</a>
+    </section>
+
+    </div><!-- /content-area -->
+
+  </div><!-- /page-body -->
+
+</div><!-- /content -->
+
+<script>
+  // ── Auth Gate ────────────────────────────────
+  const HASH = '8573556848636e0f0ce0ef26aa645c1d2c935e63c59970f8006912c9927e52cc';
+
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function unlock() {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+  }
+
+  if (sessionStorage.getItem('proto_auth') === HASH) unlock();
+
+  document.getElementById('auth').addEventListener('submit', async e => {
+    e.preventDefault();
+    const h = await sha256(document.getElementById('pw').value);
+    if (h === HASH) {
+      sessionStorage.setItem('proto_auth', HASH);
+      unlock();
+    } else {
+      document.getElementById('err').style.display = 'block';
+    }
+  });
+
+  // ── Desktop nav selection logic ──────────────
+  // One active selection at a time across the entire header
+  function clearAllNavSelections() {
+    document.querySelectorAll(
+      '#primary-links a.selected, #secondary-nav a.selected, ' +
+      '#icon-search.selected, #icon-lang.selected, #icon-shop.selected, #icon-login.selected'
+    ).forEach(el => el.classList.remove('selected'));
+  }
+
+  document.querySelectorAll('#primary-links a, #secondary-nav a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const wasSelected = link.classList.contains('selected');
+      clearAllNavSelections();
+      if (!wasSelected) link.classList.add('selected');
+    });
+  });
+
+  ['icon-search', 'icon-lang', 'icon-shop', 'icon-login'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      const wasSelected = el.classList.contains('selected');
+      clearAllNavSelections();
+      if (!wasSelected) el.classList.add('selected');
+    });
+  });
+
+  // ── Hamburger menu ───────────────────────────
+  const overlay   = document.getElementById('menu-overlay');
+  const hamburger = document.getElementById('icon-hamburger');
+
+  function toggleMenu() {
+    const isOpen = overlay.classList.toggle('open');
+    hamburger.classList.toggle('menu-open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+
+  function closeMenu() {
+    overlay.classList.remove('open');
+    hamburger.classList.remove('menu-open');
+    document.body.style.overflow = '';
+  }
+
+  hamburger.addEventListener('click', e => { e.preventDefault(); toggleMenu(); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeMenu();
+  });
+
+  // ── Sub-nav active state ─────────────────────
+  document.querySelectorAll('.sub-nav-list a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.sub-nav-list a').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+
+  // ── Menu item selection ──────────────────────
+  function clearAllMenuSelections() {
+    document.querySelectorAll(
+      '#menu-primary a.selected, #menu-secondary a.selected, .menu-utils a.selected'
+    ).forEach(el => el.classList.remove('selected'));
+  }
+
+  document.querySelectorAll(
+    '#menu-primary a, #menu-secondary a, .menu-utils a'
+  ).forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const wasSelected = link.classList.contains('selected');
+      clearAllMenuSelections();
+      if (!wasSelected) link.classList.add('selected');
+    });
+  });
+</script>
+
+</body>
+</html>
