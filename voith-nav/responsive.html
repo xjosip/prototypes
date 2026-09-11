@@ -294,6 +294,67 @@
 
 
   /* ════════════════════════════════════════════
+     MEGA MENU (desktop only, ≥1366px)
+  ════════════════════════════════════════════ */
+  .mega-menu {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: var(--blue-900);
+    z-index: 98;
+    padding: 48px var(--page-margin);
+    display: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .mega-menu.open { display: flex; }
+
+  .mega-menu-left {
+    flex-shrink: 0;
+    width: 280px;
+    padding-right: 48px;
+  }
+
+  .mega-menu-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .mega-menu-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--subtle-default);
+    line-height: 1.5;
+  }
+
+  .mega-menu-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 48px;
+    flex: 1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mega-menu-links a {
+    display: block;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .mega-menu-links a:hover {
+    color: var(--subtle-hover);
+  }
+
+  /* ════════════════════════════════════════════
      HAMBURGER MENU OVERLAY
   ════════════════════════════════════════════ */
   .menu-overlay {
@@ -829,6 +890,25 @@
   </header>
 
   <!-- ══════════════════════════════════════════
+       MEGA MENU (desktop only)
+  ══════════════════════════════════════════ -->
+  <div class="mega-menu" id="mega-menu">
+    <div class="mega-menu-left">
+      <div class="mega-menu-title" id="mega-title">Industries</div>
+      <div class="mega-menu-subtitle" id="mega-subtitle">Solutions for every industry challenge</div>
+    </div>
+    <ul class="mega-menu-links" id="mega-links">
+      <li><a href="#" onclick="return false;">Paper</a></li>
+      <li><a href="#" onclick="return false;">Hydropower</a></li>
+      <li><a href="#" onclick="return false;">Marine Technology</a></li>
+      <li><a href="#" onclick="return false;">Rail Vehicles</a></li>
+      <li><a href="#" onclick="return false;">Power, Oil, Gas &amp; Chemicals</a></li>
+      <li><a href="#" onclick="return false;">Metals &amp; Recycling</a></li>
+      <li><a href="#" onclick="return false;">Mining &amp; Cement</a></li>
+    </ul>
+  </div>
+
+  <!-- ══════════════════════════════════════════
        SUB-NAVIGATION BAR
   ══════════════════════════════════════════ -->
   <nav class="sub-nav" aria-label="Section navigation">
@@ -1024,6 +1104,58 @@
     hamburger.classList.remove('menu-open');
     document.body.style.overflow = '';
   }
+
+  // ── Mega menu (desktop hover) ─────────────
+  const megaMenu = document.getElementById('mega-menu');
+  const megaTitle = document.getElementById('mega-title');
+  const megaSubtitle = document.getElementById('mega-subtitle');
+  const megaLinks = document.getElementById('mega-links');
+
+  const megaData = {
+    'Industries': {
+      subtitle: 'Solutions for every industry challenge',
+      links: ['Paper', 'Hydropower', 'Marine Technology', 'Rail Vehicles', 'Power, Oil, Gas & Chemicals', 'Metals & Recycling', 'Mining & Cement']
+    },
+    'Digitalization': {
+      subtitle: 'Digital solutions for industrial excellence',
+      links: ['OnCumulus IoT Platform', 'Digital Twin', 'Predictive Maintenance', 'Data Analytics', 'Process Optimization', 'Smart Sensors']
+    },
+    'Services': {
+      subtitle: 'Maximize performance and availability',
+      links: ['Service Portfolio', 'Spare Parts', 'Modernization', 'Field Service', 'Training & Consulting', 'Service Agreements']
+    },
+    'Magazin': {
+      subtitle: 'Stories, insights and innovation',
+      links: ['Latest Articles', 'Technology Stories', 'Sustainability', 'People & Culture', 'Events', 'Press Releases']
+    }
+  };
+
+  let megaTimeout;
+
+  function showMega(label) {
+    if (window.innerWidth < 1366) return;
+    const data = megaData[label];
+    if (!data) return;
+    megaTitle.textContent = label;
+    megaSubtitle.textContent = data.subtitle;
+    megaLinks.innerHTML = data.links.map(l =>
+      `<li><a href="#" onclick="return false;">${l}</a></li>`
+    ).join('');
+    clearTimeout(megaTimeout);
+    megaMenu.classList.add('open');
+  }
+
+  function hideMega() {
+    megaTimeout = setTimeout(() => megaMenu.classList.remove('open'), 200);
+  }
+
+  document.querySelectorAll('#primary-links a').forEach(link => {
+    link.addEventListener('mouseenter', () => showMega(link.textContent.trim()));
+    link.addEventListener('mouseleave', hideMega);
+  });
+
+  megaMenu.addEventListener('mouseenter', () => clearTimeout(megaTimeout));
+  megaMenu.addEventListener('mouseleave', hideMega);
 
   hamburger.addEventListener('click', e => { e.preventDefault(); toggleMenu(); });
 
