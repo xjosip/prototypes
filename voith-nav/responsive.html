@@ -473,6 +473,92 @@
     .menu-contact-wrap { display: none; }
   }
 
+  /* ── Mobile sub-nav (slide-in panel) ──── */
+  .menu-sub {
+    position: absolute;
+    inset: 0;
+    background: var(--blue-900);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .menu-sub.open {
+    transform: translateX(0);
+  }
+
+  .menu-sub-back {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 20px;
+    margin: 0 calc(var(--page-margin) - 20px);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-decoration: none;
+    transition: background 0.25s ease;
+    width: calc(100% - 2 * (var(--page-margin) - 20px));
+  }
+
+  .menu-sub-back:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .menu-sub-back svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    flex-shrink: 0;
+  }
+
+  .menu-sub-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    padding: 16px 20px 4px;
+    margin: 0 calc(var(--page-margin) - 20px);
+  }
+
+  .menu-sub-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--subtle-default);
+    padding: 0 20px 12px;
+    margin: 0 calc(var(--page-margin) - 20px);
+    line-height: 1.5;
+  }
+
+  .menu-sub-links {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+  }
+
+  .menu-sub-links a {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 20px;
+    margin: 0 calc(var(--page-margin) - 20px);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--white);
+    text-decoration: none;
+    transition: background 0.25s ease;
+  }
+
+  .menu-sub-links a:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
   .menu-contact-wrap {
     padding: 16px var(--page-margin);
   }
@@ -975,6 +1061,17 @@
       <a class="menu-contact" href="#" onclick="return false;">Contact</a>
     </div>
 
+    <!-- Sub-nav panel (slides in on tap) -->
+    <div class="menu-sub" id="menu-sub">
+      <button class="menu-sub-back" id="menu-sub-back">
+        <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <div class="menu-sub-title" id="menu-sub-title">Industries</div>
+      <div class="menu-sub-subtitle" id="menu-sub-subtitle">Solutions for every industry challenge</div>
+      <ul class="menu-sub-links" id="menu-sub-links"></ul>
+    </div>
+
   </div><!-- /menu-overlay -->
 
   <!-- ══════════════════════════════════════════
@@ -1174,23 +1271,36 @@
     });
   });
 
-  // ── Menu item selection ──────────────────────
-  function clearAllMenuSelections() {
-    document.querySelectorAll(
-      '#menu-primary a.selected, #menu-secondary a.selected, .menu-utils a.selected'
-    ).forEach(el => el.classList.remove('selected'));
-  }
+  // ── Mobile sub-nav panel ─────────────────────
+  const menuSub = document.getElementById('menu-sub');
+  const menuSubBack = document.getElementById('menu-sub-back');
+  const menuSubTitle = document.getElementById('menu-sub-title');
+  const menuSubSubtitle = document.getElementById('menu-sub-subtitle');
+  const menuSubLinks = document.getElementById('menu-sub-links');
 
-  document.querySelectorAll(
-    '#menu-primary a, #menu-secondary a, .menu-utils a'
-  ).forEach(link => {
+  document.querySelectorAll('#menu-primary a').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
-      const wasSelected = link.classList.contains('selected');
-      clearAllMenuSelections();
-      if (!wasSelected) link.classList.add('selected');
+      const label = link.textContent.trim();
+      const data = megaData[label];
+      if (!data) return;
+      menuSubTitle.textContent = label;
+      menuSubSubtitle.textContent = data.subtitle;
+      menuSubLinks.innerHTML = data.links.map(l =>
+        `<li><a href="#" onclick="return false;">${l}</a></li>`
+      ).join('');
+      menuSub.classList.add('open');
     });
   });
+
+  menuSubBack.addEventListener('click', () => menuSub.classList.remove('open'));
+
+  // Also close sub-panel when closing main menu
+  const _origToggle = toggleMenu;
+  toggleMenu = function() {
+    menuSub.classList.remove('open');
+    _origToggle();
+  };
 </script>
 
 </body>
