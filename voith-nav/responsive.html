@@ -286,6 +286,22 @@
     color: var(--accent-green);
   }
 
+  .primary-links a.selected-hidden,
+  .secondary-nav a.selected-hidden {
+    color: var(--white) !important;
+  }
+  .primary-links a.selected-hidden::after,
+  .secondary-nav a.selected-hidden::after {
+    transform: scaleX(0) !important;
+    background: var(--white) !important;
+  }
+
+  /* Mega-active overrides everything including selected-hidden */
+  .primary-links a.mega-active::after {
+    transform: scaleX(1) !important;
+    background: var(--white) !important;
+  }
+
   .primary-links a.selected::after,
   .secondary-nav a.selected::after {
     background: var(--accent-green);
@@ -1184,6 +1200,13 @@
   document.querySelectorAll('#primary-links a, #secondary-nav a').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
+      // Close mega menu immediately
+      clearTimeout(megaTimeout);
+      megaMenu.classList.remove('open');
+      if (activeMegaLink) activeMegaLink.classList.remove('mega-active');
+      activeMegaLink = null;
+      document.querySelectorAll('#primary-links a.selected-hidden').forEach(a => a.classList.remove('selected-hidden'));
+      // Toggle selection
       const wasSelected = link.classList.contains('selected');
       clearAllNavSelections();
       if (!wasSelected) link.classList.add('selected');
@@ -1243,8 +1266,9 @@
   };
 
   let megaTimeout;
+  let activeMegaLink = null;
 
-  function showMega(label) {
+  function showMega(label, link) {
     if (window.innerWidth < 1366) return;
     const data = megaData[label];
     if (!data) return;
@@ -1254,15 +1278,27 @@
       `<li><a href="#" onclick="return false;">${l}</a></li>`
     ).join('');
     clearTimeout(megaTimeout);
+    // Hide selected state while hovering
+    document.querySelectorAll('#primary-links a.selected').forEach(a => a.classList.add('selected-hidden'));
+    // Keep underline on the triggering link
+    if (activeMegaLink) activeMegaLink.classList.remove('mega-active');
+    activeMegaLink = link;
+    if (activeMegaLink) activeMegaLink.classList.add('mega-active');
     megaMenu.classList.add('open');
   }
 
   function hideMega() {
-    megaTimeout = setTimeout(() => megaMenu.classList.remove('open'), 200);
+    megaTimeout = setTimeout(() => {
+      megaMenu.classList.remove('open');
+      if (activeMegaLink) activeMegaLink.classList.remove('mega-active');
+      activeMegaLink = null;
+      // Restore selected state
+      document.querySelectorAll('#primary-links a.selected-hidden').forEach(a => a.classList.remove('selected-hidden'));
+    }, 200);
   }
 
   document.querySelectorAll('#primary-links a').forEach(link => {
-    link.addEventListener('mouseenter', () => showMega(link.textContent.trim()));
+    link.addEventListener('mouseenter', () => showMega(link.textContent.trim(), link));
     link.addEventListener('mouseleave', hideMega);
   });
 
